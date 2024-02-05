@@ -1,0 +1,18 @@
+main: io.github.enqorman.minefactions.MineFactionsPlugin
+name: MineFactions
+version: '1.0'
+description: A Factions Plugin for Minecraft 1.20
+author: enqorman
+depend:
+  - WorldGuard
+  - PlaceholderAPI
+commands:
+  faction:
+    usage: /<command>
+    description: The Factions Command
+    aliases:
+      - f
+    permission: minefactions.commands.faction
+permissions:
+  minefactions.commands.faction:
+    description: The Command Usage permission for /faction
