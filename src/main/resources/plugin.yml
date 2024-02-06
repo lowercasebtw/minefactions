@@ -1,6 +1,7 @@
 main: io.github.enqorman.minefactions.MineFactionsPlugin
 name: MineFactions
 version: '1.0'
+api-version: '1.20'
 description: A Factions Plugin for Minecraft 1.20
 author: enqorman
 depend:

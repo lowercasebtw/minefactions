@@ -35,8 +35,7 @@ public class FactionManager implements Manager {
 
         ConfigurationSection factionsSection = configuration.getConfigurationSection("factions");
         if (factionsSection == null) {
-            configuration.createSection("factions");
-            factionsSection = configuration.getConfigurationSection("factions");
+            configuration.set("factions", new LinkedList<>());
             return;
         }
 
