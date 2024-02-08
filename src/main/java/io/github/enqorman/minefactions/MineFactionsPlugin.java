@@ -3,29 +3,35 @@ package io.github.enqorman.minefactions;
 import io.github.enqorman.minefactions.commands.faction.FactionCommand;
 import io.github.enqorman.minefactions.manager.FactionManager;
 import io.github.enqorman.minefactions.manager.LandManager;
+import io.github.enqorman.minefactions.util.ChatFilter;
+
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
-import java.util.logging.Logger;
 
 public final class MineFactionsPlugin extends JavaPlugin {
     private static MineFactionsPlugin instance;
 
-    private static FactionManager factionManager;
-    private static LandManager landManager;
+    private FactionManager factionManager;
+    private LandManager landManager;
 
     @Override
     public void onEnable() {
         instance = this;
-        Objects.requireNonNull(getCommand("faction")).setExecutor(new FactionCommand());
+        Objects.requireNonNull(getCommand("supersecretfactioncommand")).setExecutor(new FactionCommand());
         saveDefaultConfig();
         reloadConfig();
+
+        ChatFilter.init();
 
         factionManager = new FactionManager();
         landManager = new LandManager();
 
         factionManager.loadFactions();
+
+        // TODO
+        // getServer().getPluginManager().registerEvents(new BlockBreakEventHandler(),
+        // this);
     }
 
     @Override
@@ -37,11 +43,11 @@ public final class MineFactionsPlugin extends JavaPlugin {
         return instance;
     }
 
-    public static FactionManager getFactionManager() {
+    public FactionManager getFactionManager() {
         return factionManager;
     }
 
-    public static LandManager getLandManager() {
+    public LandManager getLandManager() {
         return landManager;
     }
 }

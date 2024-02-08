@@ -15,4 +15,19 @@ public class AboutSubCommand implements SubCommand {
         sender.sendMessage(ChatUtil.colorize("&6&l----------------------------"));
         return CommandResult.SUCCESS;
     }
+
+    @Override
+    public String getDescription() {
+        return "About the plugin";
+    }
+
+    @Override
+    public String getPermission() {
+        return "minefactions.command.faction.about";
+    }
+
+    @Override
+    public boolean isConsoleAllowed() {
+        return true;
+    }
 }

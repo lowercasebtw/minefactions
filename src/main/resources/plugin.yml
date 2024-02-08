@@ -8,11 +8,9 @@ depend:
   - WorldGuard
   - PlaceholderAPI
 commands:
-  faction:
+  supersecretfactioncommand:
     usage: /<command>
     description: The Factions Command
-    aliases:
-      - f
     permission: minefactions.commands.faction
 permissions:
   minefactions.commands.faction:

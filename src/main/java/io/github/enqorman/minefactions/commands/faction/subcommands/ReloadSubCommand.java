@@ -10,4 +10,19 @@ public class ReloadSubCommand implements SubCommand {
         sender.sendMessage("reload cmd");
         return CommandResult.SUCCESS;
     }
+
+    @Override
+    public String getDescription() {
+        return "Reload the plugin";
+    }
+
+    @Override
+    public String getPermission() {
+        return "minefactions.command.faction.reload";
+    }
+
+    @Override
+    public boolean isConsoleAllowed() {
+        return true;
+    }
 }

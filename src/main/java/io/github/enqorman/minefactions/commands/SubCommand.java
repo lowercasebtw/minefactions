@@ -4,4 +4,10 @@ import org.bukkit.command.CommandSender;
 
 public interface SubCommand {
     CommandResult execute(CommandSender player, String[] args);
+
+    String getDescription();
+
+    String getPermission();
+
+    boolean isConsoleAllowed();
 }

@@ -1,4 +1,4 @@
-silk-spawners: true
+silk-spawners: false
 banned-words:
   - fuck
   - fucker
@@ -12,4 +12,5 @@ banned-words:
   - pussy
   - clit
   - kys
+  - bitch
 factions:

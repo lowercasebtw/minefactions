@@ -1,21 +1,22 @@
 package io.github.enqorman.minefactions.manager;
 
+import com.sk89q.worldedit.entity.Player;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import io.github.enqorman.minefactions.MineFactionsPlugin;
-import org.bukkit.Color;
+import io.github.enqorman.minefactions.util.SerializeUtil;
+
 import org.bukkit.Location;
-import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.util.LinkedList;
+import java.util.logging.Logger;
 import java.util.List;
+import java.util.LinkedList;
 import java.util.UUID;
 import java.util.logging.Level;
 
 public class Faction {
     private String name;
     private String description;
-    private String color;
     private UUID leader;
     private final List<UUID> members;
     private int killCount;
@@ -24,10 +25,10 @@ public class Faction {
     private Location homeLocation;
     private ProtectedRegion claimRegion;
 
-    public Faction(String name, String description, String color, UUID leader, List<UUID> members, int killCount, int dtr, Location homeLocation, ProtectedRegion claimRegion) {
+    public Faction(String name, String description, UUID leader, List<UUID> members, int killCount, int dtr,
+            Location homeLocation, ProtectedRegion claimRegion) {
         this.name = name;
         this.description = description;
-        this.color = color;
         this.leader = leader;
         this.members = members;
         this.killCount = killCount;
@@ -52,51 +53,6 @@ public class Faction {
         this.description = description;
     }
 
-    public String getColor() {
-        return color;
-    }
-
-    public Color getBukkitColor() {
-        switch (color.toLowerCase()) {
-            case "red":
-                return Color.RED;
-            case "green":
-                return Color.GREEN;
-            case "lime":
-                return Color.LIME;
-            case "olive":
-                return Color.OLIVE;
-            case "black":
-                return Color.BLACK;
-            case "blue":
-                return Color.BLUE;
-            case "aqua":
-                return Color.AQUA;
-            case "teal":
-                return Color.TEAL;
-            case "purple":
-                return Color.PURPLE;
-            case "silver":
-                return Color.SILVER;
-            case "navy":
-                return Color.NAVY;
-            case "maroon":
-                return Color.MAROON;
-            case "fuchsia":
-                return Color.FUCHSIA;
-            case "yellow":
-                return Color.YELLOW;
-            case "orange":
-                return Color.ORANGE;
-        }
-        MineFactionsPlugin.getInstance().getLogger().log(Level.WARNING, "Faction '" + name + "' has color '" + color + "' which is not recognised or not a bukkit color.");
-        return Color.WHITE;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-
     public UUID getLeaderUUID() {
         return leader;
     }
@@ -105,12 +61,20 @@ public class Faction {
         this.leader = leader;
     }
 
-    public List<UUID> getMembers() {
+    public List<UUID> getMemberUUIDs() {
         return members;
     }
 
     public void addMember(UUID memberUUID) {
         members.add(memberUUID);
+    }
+
+    public boolean isMember(UUID uuid) {
+        return leader.equals(uuid) || members.contains(uuid);
+    }
+
+    public boolean isMember(Player player) {
+        return isMember(player.getUniqueId());
     }
 
     public int getKillCount() {
@@ -146,29 +110,54 @@ public class Faction {
         this.claimRegion = claimRegion;
     }
 
-    public ConfigurationSection saveFaction(ConfigurationSection section) {
+    public ConfigurationSection saveFaction(ConfigurationSection factionsSection) {
+        ConfigurationSection section = factionsSection.createSection(leader.toString());
+
         section.set("name", name);
         section.set("description", description);
-        section.set("color", color);
-        section.set("leader", leader);
-        section.set("members", members);
+        section.set("members", members.stream().map(uuid -> uuid.toString()).toList());
         section.set("kills", killCount);
         section.set("dtr", dtr);
-        return section;
+
+        if (homeLocation != null) {
+            ConfigurationSection homeSection = section.createSection("home");
+            section.set("home", SerializeUtil.saveLocation(homeLocation, homeSection));
+        }
+
+        // TODO: claimRegion
+        return factionsSection;
     }
 
     public static Faction loadFaction(ConfigurationSection section) {
+        // section name is leader uuid
         try {
+            if (section == null)
+                throw new Exception("Failed to load faction. Reason: Configuration section is null");
+
             String name = section.getString("name");
-            String description = section.getString("description");
-            String color = section.getString("color");
-            UUID leader = UUID.fromString(section.getString("leader"));
-            List<UUID> members = (List<UUID>) section.getList("members");
-            int killCount = section.getInt("kills");
-            int dtr = section.getInt("dtr");
-            return new Faction(name, description, color, leader, members, killCount, dtr, null, null);
-        } catch(Exception exception) {
-            MineFactionsPlugin.getInstance().getLogger().log(Level.SEVERE, exception.getLocalizedMessage());
+            if (name == null)
+                throw new Exception("No name for faction '" + section.getName() + "' in config");
+
+            String description = section.getString("description", "(empty)");
+            UUID leader = UUID.fromString(section.getName());
+
+            List<String> membersUUIDstrings = (List<String>) section.getStringList("members");
+            if (membersUUIDstrings == null)
+                membersUUIDstrings = new LinkedList<>();
+            List<UUID> membersUUIDs = membersUUIDstrings.stream().map(uuidStr -> UUID.fromString(uuidStr)).toList();
+
+            int killCount = section.getInt("kills", 0);
+            int dtr = section.getInt("dtr", 1);
+
+            ConfigurationSection homeSection = section.getConfigurationSection("home");
+            Location homeLocation = null;
+            if (homeSection != null)
+                homeLocation = SerializeUtil.loadLocation(homeSection);
+
+            return new Faction(name, description, leader, membersUUIDs, killCount, dtr, homeLocation, null);
+        } catch (Exception exception) {
+            Logger logger = MineFactionsPlugin.getInstance().getLogger();
+            logger.log(Level.SEVERE, "Failed to load faction", exception);
             return null;
         }
     }
