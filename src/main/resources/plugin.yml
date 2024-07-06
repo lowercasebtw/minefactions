@@ -1,17 +1,10 @@
-main: io.github.enqorman.minefactions.MineFactionsPlugin
 name: MineFactions
 version: '1.0'
-api-version: '1.20'
-description: A Factions Plugin for Minecraft 1.20
-author: enqorman
-depend:
-  - WorldGuard
+main: io.github.lowercasebtw.minefactions.MineFactionsPlugin
+api-version: '1.21'
+description: A Factions Plugin for Minecraft 1.21+
+author: lowercasebtw
+softdepend:
   - PlaceholderAPI
-commands:
-  supersecretfactioncommand:
-    usage: /<command>
-    description: The Factions Command
-    permission: minefactions.commands.faction
-permissions:
-  minefactions.commands.faction:
-    description: The Command Usage permission for /faction
+depend:
+  - CommandAPI
