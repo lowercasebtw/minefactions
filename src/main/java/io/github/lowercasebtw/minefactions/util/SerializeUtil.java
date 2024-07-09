@@ -1,6 +1,7 @@
 package io.github.lowercasebtw.minefactions.util;
 
 import io.github.lowercasebtw.minefactions.MineFactionsPlugin;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -12,34 +13,43 @@ import java.util.logging.Logger;
 
 public class SerializeUtil {
     public static ConfigurationSection saveLocation(Location location, ConfigurationSection section) {
-        if (location != null) {
-            section.set("x", location.getX());
-            section.set("y", location.getY());
-            section.set("z", location.getZ());
-            
-            World world = location.getWorld();
-            if (world != null) {
-                section.set("world", location.getWorld().getName());
-            }
-            
-            section.set("yaw", location.getYaw());
-            section.set("pitch", location.getPitch());
+        MineFactionsPlugin plugin = MineFactionsPlugin.getInstance();
+        Logger logger = plugin.getLogger();
+        if (location == null) {
+            logger.warning("Failed to save location to config as it was null.");
+            return section;
         }
         
+        World world = location.getWorld();
+        if (world == null) {
+            logger.warning("Failed to save location to config as world was null.");
+            return section;
+        }
+        
+        section.set("world", location.getWorld().getName());
+        section.set("x", location.getX());
+        section.set("y", location.getY());
+        section.set("z", location.getZ());
+        section.set("yaw", location.getYaw());
+        section.set("pitch", location.getPitch());
         return section;
     }
 
     public static Location loadLocation(ConfigurationSection section) {
         MineFactionsPlugin plugin = MineFactionsPlugin.getInstance();
         try {
+            World world = plugin.getServer().getWorld(section.getString("world", ""));
+            if (world == null) {
+                throw new Exception("World was null whilst loading location from config.");
+            }
+            
             double x = section.getDouble("x", 0);
             double y = section.getDouble("y", 0);
             double z = section.getDouble("z", 0);
-            // Hacky but will make sure it works hopefully all the time
-            String worldName = section.getString("world", plugin.getServer().getWorlds().get(0).getName());
             float yaw = (float) section.getDouble("yaw", 0);
             float pitch = (float) section.getDouble("pitch", 0);
-			return new Location(plugin.getServer().getWorld(worldName), x, y, z, yaw, pitch);
+            
+			return new Location(world, x, y, z, yaw, pitch);
         } catch (Exception exception) {
             Logger logger = plugin.getLogger();
             logger.log(Level.SEVERE, "Failed to load location from config.");
@@ -49,15 +59,19 @@ public class SerializeUtil {
     }
     
     public static ConfigurationSection saveBoundingBox(BoundingBox boundingBox, ConfigurationSection section) {
-        if (boundingBox != null) {
-            section.set("minX", boundingBox.getMinX());
-            section.set("minY", boundingBox.getMinY());
-            section.set("minZ", boundingBox.getMinZ());
-            section.set("maxX", boundingBox.getMaxX());
-            section.set("maxY", boundingBox.getMaxY());
-            section.set("maxZ", boundingBox.getMaxZ());
+        if (boundingBox == null) {
+            MineFactionsPlugin plugin = MineFactionsPlugin.getInstance();
+            Logger logger = plugin.getLogger();
+            logger.warning("Failed to save bounding box as it was null.");
+            return section;
         }
         
+        section.set("minX", boundingBox.getMinX());
+        section.set("minY", boundingBox.getMinY());
+        section.set("minZ", boundingBox.getMinZ());
+        section.set("maxX", boundingBox.getMaxX());
+        section.set("maxY", boundingBox.getMaxY());
+        section.set("maxZ", boundingBox.getMaxZ());
         return section;
     }
     

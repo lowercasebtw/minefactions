@@ -1,11 +1,10 @@
 package io.github.lowercasebtw.minefactions;
 
 import io.github.lowercasebtw.minefactions.commands.Commands;
-import io.github.lowercasebtw.minefactions.events.BlockBreakEventHandler;
-import io.github.lowercasebtw.minefactions.events.PlayerInteractEventHandler;
 import io.github.lowercasebtw.minefactions.expansion.FactionExpansion;
 import io.github.lowercasebtw.minefactions.items.Items;
 import io.github.lowercasebtw.minefactions.manager.FactionManager;
+import io.github.lowercasebtw.minefactions.manager.ItemManager;
 import io.github.lowercasebtw.minefactions.manager.WandManager;
 import io.github.lowercasebtw.minefactions.util.ChatFilter;
 import org.bukkit.Bukkit;
@@ -15,6 +14,7 @@ public final class MineFactionsPlugin extends JavaPlugin {
     private static MineFactionsPlugin instance;
 
     private FactionManager factionManager;
+    private ItemManager itemManager;
     private WandManager wandManager;
 
     @Override
@@ -25,7 +25,7 @@ public final class MineFactionsPlugin extends JavaPlugin {
         reloadConfig();
         
         // Initialize all custom items
-        new Items();
+        Items.initialize();
         
         // Initialize all commands
         Commands.initialize();
@@ -35,10 +35,12 @@ public final class MineFactionsPlugin extends JavaPlugin {
 
         factionManager = new FactionManager();
         factionManager.loadFactions();
+        
+        itemManager = new ItemManager();
         wandManager = new WandManager();
 
-        getServer().getPluginManager().registerEvents(new BlockBreakEventHandler(), this);
-        getServer().getPluginManager().registerEvents(new PlayerInteractEventHandler(), this);
+        getServer().getPluginManager().registerEvents(factionManager, this);
+        getServer().getPluginManager().registerEvents(itemManager, this);
         
         // Register the placeholder if placeholder-api is installed
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {

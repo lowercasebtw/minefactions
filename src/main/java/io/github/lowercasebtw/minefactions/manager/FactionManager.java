@@ -4,9 +4,14 @@ import io.github.lowercasebtw.minefactions.MineFactionsPlugin;
 import io.github.lowercasebtw.minefactions.timers.DTRTimer;
 import io.github.lowercasebtw.minefactions.util.Util;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 
@@ -17,7 +22,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
 
-public class FactionManager {
+public class FactionManager implements Listener {
     private final List<Faction> factions = new LinkedList<>();
 
     private final DTRTimer timer = new DTRTimer();
@@ -157,6 +162,41 @@ public class FactionManager {
         } catch (Exception exception) {
             plugin.getLogger().log(Level.SEVERE, "Failed to save factions!", exception);
             return false;
+        }
+    }
+    
+    // Events
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event) {
+        MineFactionsPlugin plugin = MineFactionsPlugin.getInstance();
+        FactionManager factionManager = plugin.getFactionManager();
+        Block block = event.getBlock();
+        Player player = event.getPlayer();
+        for (Faction faction : factionManager.getFactions()) {
+            if (faction.getBoundingBox() == null)
+                continue;
+            BoundingBox boundingBox = faction.getBoundingBox();
+            if (boundingBox.contains(block.getBoundingBox()) && !faction.isMember(player)) {
+                event.setCancelled(true);
+                Util.sendMessage(player, "&cYou cannot break blocks in someone else's claim!");
+            }
+        }
+    }
+    
+    @EventHandler
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        MineFactionsPlugin plugin = MineFactionsPlugin.getInstance();
+        FactionManager factionManager = plugin.getFactionManager();
+        for (Faction faction : factionManager.getFactions()) {
+            BoundingBox boundingBox = faction.getBoundingBox();
+            if (boundingBox == null)
+                continue;
+            Location location = player.getLocation();
+            if (boundingBox.contains(new Vector(location.getX(), location.getY(), location.getZ())) && !faction.isMember(player.getUniqueId())) {
+                event.setCancelled(true);
+                Util.sendMessage(player, "&cYou cannot interact with stuff inside someone else's faction!");
+            }
         }
     }
 }

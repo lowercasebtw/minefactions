@@ -45,7 +45,7 @@ public class EqualsSubcommand extends CommandAPICommand implements CommandImpl {
 			Util.sendMessage(player, Util.colorize("&cThat item does not exist!"));
 			Util.sendMessage(player, Util.colorize("&aCurrent Existing Items:"));
 			for (Item item : ItemManager.values()) {
-				Util.sendMessage(player, Util.colorize(" &7&l- &r(id=" + item.getIdentifier() + ") &6\"" + item.getDisplayName() + "&6\""));
+				Util.sendMessage(player, Util.colorize(" &7&l- &r(id=" + item.getNamespacedKey() + ") &6\"" + item.getDisplayName() + "&6\""));
 			}
 			return;
 		}
@@ -58,8 +58,11 @@ public class EqualsSubcommand extends CommandAPICommand implements CommandImpl {
 		}
 		
 		Item item = ItemManager.get(namespacedKey);
-		boolean equals = item.equalsStack(itemStack);
-		Util.sendMessage(player, Util.colorize(equals ? "&aThey equal!" : "&cThey do not equal!"));
+		player.sendMessage("Item name: " + item.getDisplayName());
+		player.sendMessage("Item material: " + item.getMaterial());
+		player.sendMessage("Item stack size: " + item.getMaxStackSize());
+		player.sendMessage("Item enchanted: " + item.isEnchanted());
+		Util.sendMessage(player, Util.colorize(item.equalsStack(itemStack) ? "&aThey equal!" : "&cThey do not equal!"));
 	}
 	
 	@Override

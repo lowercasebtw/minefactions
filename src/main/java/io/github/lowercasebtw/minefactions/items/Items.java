@@ -1,6 +1,8 @@
 package io.github.lowercasebtw.minefactions.items;
 
-import io.github.lowercasebtw.minefactions.items.item.*;
+import io.github.lowercasebtw.minefactions.items.item.cooldown.*;
+import io.github.lowercasebtw.minefactions.items.item.normal.ClaimWandItem;
+import io.github.lowercasebtw.minefactions.items.item.normal.JakeItem;
 
 public class Items {
 	public static final CallbackItem CALLBACK = new CallbackItem();
@@ -10,5 +12,10 @@ public class Items {
 	public static final AntiPlaceItem ANTI_PLACE = new AntiPlaceItem();
 	public static final BlinderItem BLINDER = new BlinderItem();
 	
+	public static final JakeItem JAKE = new JakeItem(false, false);
+	public static final JakeItem GOLDEN_JAKE = new JakeItem(true, false);
+	public static final JakeItem ENCHANTED_GOLDEN_JAKE = new JakeItem(true, true);
 	public static final ClaimWandItem CLAIM_WAND = new ClaimWandItem();
+	
+	public static void initialize() {}
 }

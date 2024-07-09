@@ -2,6 +2,7 @@ package io.github.lowercasebtw.minefactions.timers;
 
 import io.github.lowercasebtw.minefactions.MineFactionsPlugin;
 import io.github.lowercasebtw.minefactions.items.Item;
+import io.github.lowercasebtw.minefactions.items.CooldownItem;
 import io.github.lowercasebtw.minefactions.manager.ItemManager;
 import io.github.lowercasebtw.minefactions.util.Util;
 import org.bukkit.OfflinePlayer;
@@ -14,7 +15,7 @@ public class ItemCooldownTimer extends BukkitRunnable {
 	private final UUID playerUuid;
 	private final Item item;
 	
-	public ItemCooldownTimer(UUID playerUuid, Item item) {
+	public ItemCooldownTimer(UUID playerUuid, CooldownItem item) {
 		this.playerUuid = playerUuid;
 		this.item = item;
 		this.currentTicks = item.getCooldownTicks();

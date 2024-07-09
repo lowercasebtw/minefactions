@@ -14,72 +14,72 @@ import java.util.List;
 import static io.github.lowercasebtw.minefactions.manager.ItemManager.CUSTOM_ITEM_IDENTIFIER_NAMESPACE;
 
 public abstract class Item {
-	private final NamespacedKey identifier;
-	private final Material material;
-	private final String displayName;
-	private final int maxStackSize;
-	private final int cooldownTicks;
-	private boolean isSpecial;
+	private final NamespacedKey namespacedKey;
+	private Material material;
+	private String displayName;
 	private final List<String> lore;
+	private final int maxStackSize;
+	private boolean isEnchanted;
 	
-	public Item(NamespacedKey namespacedKey, Material material, int maxStackSize, int cooldownSeconds, String displayName, boolean isSpecial, List<String> lore) {
-		this.identifier = namespacedKey;
+	public Item(NamespacedKey namespacedKey, Material material, String displayName, List<String> lore, int maxStackSize, boolean isEnchanted) {
+		this.namespacedKey = namespacedKey;
 		this.material = material;
 		this.displayName = displayName;
-		this.maxStackSize = maxStackSize;
-		this.cooldownTicks = cooldownSeconds * 20;
 		this.lore = lore;
+		this.maxStackSize = maxStackSize;
+		this.isEnchanted = isEnchanted;
 		ItemManager.register(this);
 	}
 	
-	public Item(NamespacedKey namespacedKey, Material material, int maxStackSize, int cooldownSeconds, String displayName, List<String> lore) {
-		this(namespacedKey, material, maxStackSize, cooldownSeconds, displayName, true, lore);
-	}
-	
-	public Item(NamespacedKey namespacedKey, Material material, String displayName, List<String> lore) {
-		this(namespacedKey, material, 1, -999999, displayName, false, lore);
-	}
-	
-	public NamespacedKey getIdentifier() {
-		return identifier;
+	public NamespacedKey getNamespacedKey() {
+		return namespacedKey;
 	}
 	
 	public Material getMaterial() {
 		return material;
 	}
 	
-	public int getMaxStackSize() {
-		return maxStackSize;
-	}
-	
-	public int getCooldownTicks() {
-		return cooldownTicks;
-	}
-	
-	public int getCooldownSeconds() {
-		return cooldownTicks / 20;
+	public void setMaterial(Material material) {
+		if (this.material == material)
+			return;
+		this.material = material;
 	}
 	
 	public String getDisplayName() {
 		return displayName;
 	}
 	
-	public boolean isSpecial() {
-		return isSpecial;
+	public void setDisplayName(String displayName) {
+		if (this.displayName.equals(displayName))
+			return;
+		this.displayName = displayName;
 	}
 	
 	public List<String> getLore() {
 		return lore;
 	}
 	
+	public int getMaxStackSize() {
+		return maxStackSize;
+	}
+	
+	public boolean isEnchanted() {
+		return isEnchanted;
+	}
+	
+	public void setEnchanted(boolean enchanted) {
+		this.isEnchanted = enchanted;
+	}
+	
 	@Override
 	public boolean equals(Object object) {
 		if (object instanceof Item other) {
-			return other.identifier.equals(this.identifier) &&
+			System.out.println("meow " + other.getDisplayName() + " " + this.displayName);
+			return other.getNamespacedKey().equals(this.namespacedKey) &&
 					other.getMaterial().equals(this.material) &&
-					other.getMaxStackSize() == this.maxStackSize &&
-					other.getCooldownTicks() == this.cooldownTicks &&
-					other.isSpecial() == this.isSpecial &&
+					other.displayName.equals(this.displayName) &&
+					other.maxStackSize == this.maxStackSize &&
+					other.isEnchanted == this.isEnchanted &&
 					other.getLore().equals(this.lore);
 		} else if (object instanceof ItemStack itemStack) {
 			return this.equalsStack(itemStack);
@@ -89,34 +89,73 @@ public abstract class Item {
 	}
 	
 	public boolean equalsStack(ItemStack stack) {
-		if (!stack.getType().equals(this.getMaterial()))
+		if (!stack.getType().equals(this.getMaterial())) {
+			System.out.println("Material didn't match");
 			return false;
+		}
 		
 		ItemMeta meta = stack.getItemMeta();
-		if (meta == null)
+		if (meta == null) {
+			System.out.println("Meta was null");
 			return false;
+		}
 		
 		PersistentDataContainer container = meta.getPersistentDataContainer();
-		if (!container.has(CUSTOM_ITEM_IDENTIFIER_NAMESPACE))
+		if (!container.has(CUSTOM_ITEM_IDENTIFIER_NAMESPACE)) {
+			System.out.println("Didn't have name");
 			return false;
+		}
 		
 		String identifier = container.getOrDefault(CUSTOM_ITEM_IDENTIFIER_NAMESPACE, PersistentDataType.STRING, "");
-		if (!identifier.equals(this.identifier.toString()))
+		if (!identifier.equals(this.namespacedKey.toString())) {
+			System.out.println("Namespaced key didnt match");
 			return false;
+		}
 		
-		if (!meta.getDisplayName().equals(Util.colorize(this.getDisplayName())))
+		if (!meta.getDisplayName().equals(Util.colorize(this.getDisplayName()))) {
+			System.out.println("Display name didn't match");
 			return false;
+		}
 		
 		if (meta.getLore() != null) {
 			List<String> itemLore = this.getLore().stream().map(Util::colorize).toList();
 			if ((!meta.getLore().isEmpty() && itemLore.isEmpty()) || (!itemLore.isEmpty() && meta.getLore().isEmpty()))
 				return false;
 			for (String line : itemLore) {
-				if (!meta.getLore().contains(line))
+				if (!meta.getLore().contains(line)) {
+					System.out.println("Didn't have lore key " + line);
 					return false;
+				}
 			}
 		}
 		
+		if ((!meta.hasMaxStackSize() || meta.getMaxStackSize() != this.maxStackSize) && this.maxStackSize != 1) {
+			System.out.println("Didn't have max stack size");
+			return false;
+		}
+		
+		if (!meta.hasEnchantmentGlintOverride() || meta.getEnchantmentGlintOverride() != this.isEnchanted) {
+			System.out.println("Didn't have enchant glint override");
+			return false;
+		}
+		
 		return true;
+	}
+	
+	public ItemStack getStack() {
+		ItemStack itemStack = new ItemStack(this.getMaterial());
+		ItemMeta meta = itemStack.getItemMeta();
+		assert meta != null;
+		
+		meta.setDisplayName(Util.colorize(this.getDisplayName()));
+		meta.setMaxStackSize(this.getMaxStackSize());
+		meta.setLore(this.getLore().stream().map(Util::colorize).toList());
+		meta.setEnchantmentGlintOverride(this.isEnchanted);
+		
+		PersistentDataContainer container = meta.getPersistentDataContainer();
+		container.set(CUSTOM_ITEM_IDENTIFIER_NAMESPACE, PersistentDataType.STRING, this.getNamespacedKey().toString());
+		
+		itemStack.setItemMeta(meta);
+		return itemStack;
 	}
 }

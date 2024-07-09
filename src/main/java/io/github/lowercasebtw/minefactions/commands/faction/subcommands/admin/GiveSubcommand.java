@@ -42,7 +42,7 @@ public class GiveSubcommand extends CommandAPICommand implements CommandImpl {
 			Util.sendMessage(player, Util.colorize("&cThat item does not exist!"));
 			Util.sendMessage(player, Util.colorize("&aCurrent Existing Items:"));
 			for (Item item : ItemManager.values()) {
-				Util.sendMessage(player, Util.colorize(" &7&l- &r(id=" + item.getIdentifier() + ") &6\"" + item.getDisplayName() + "&6\""));
+				Util.sendMessage(player, Util.colorize(" &7&l- &r(id=" + item.getNamespacedKey() + ") &6\"" + item.getDisplayName() + "&6\""));
 			}
 			return;
 		}
