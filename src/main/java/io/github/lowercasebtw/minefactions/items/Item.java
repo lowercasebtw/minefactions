@@ -28,7 +28,7 @@ public abstract class Item {
 		this.lore = lore;
 		this.maxStackSize = maxStackSize;
 		this.isEnchanted = isEnchanted;
-		ItemManager.register(this);
+//		ItemManager.register(this);
 	}
 	
 	public NamespacedKey getNamespacedKey() {
@@ -89,33 +89,23 @@ public abstract class Item {
 	}
 	
 	public boolean equalsStack(ItemStack stack) {
-		if (!stack.getType().equals(this.getMaterial())) {
-			System.out.println("Material didn't match");
+		if (!stack.getType().equals(this.getMaterial()))
 			return false;
-		}
 		
 		ItemMeta meta = stack.getItemMeta();
-		if (meta == null) {
-			System.out.println("Meta was null");
+		if (meta == null)
 			return false;
-		}
 		
 		PersistentDataContainer container = meta.getPersistentDataContainer();
-		if (!container.has(CUSTOM_ITEM_IDENTIFIER_NAMESPACE)) {
-			System.out.println("Didn't have name");
+		if (!container.has(CUSTOM_ITEM_IDENTIFIER_NAMESPACE))
 			return false;
-		}
 		
 		String identifier = container.getOrDefault(CUSTOM_ITEM_IDENTIFIER_NAMESPACE, PersistentDataType.STRING, "");
-		if (!identifier.equals(this.namespacedKey.toString())) {
-			System.out.println("Namespaced key didnt match");
+		if (!identifier.equals(this.namespacedKey.toString()))
 			return false;
-		}
 		
-		if (!meta.getDisplayName().equals(Util.colorize(this.getDisplayName()))) {
-			System.out.println("Display name didn't match");
+		if (!meta.getDisplayName().equals(Util.colorize(this.getDisplayName())))
 			return false;
-		}
 		
 		if (meta.getLore() != null) {
 			List<String> itemLore = this.getLore().stream().map(Util::colorize).toList();
@@ -123,22 +113,17 @@ public abstract class Item {
 				return false;
 			for (String line : itemLore) {
 				if (!meta.getLore().contains(line)) {
-					System.out.println("Didn't have lore key " + line);
 					return false;
 				}
 			}
 		}
 		
-		if ((!meta.hasMaxStackSize() || meta.getMaxStackSize() != this.maxStackSize) && this.maxStackSize != 1) {
-			System.out.println("Didn't have max stack size");
+		if ((!meta.hasMaxStackSize() || meta.getMaxStackSize() != this.maxStackSize) && this.maxStackSize != 1)
 			return false;
-		}
 		
-		if (!meta.hasEnchantmentGlintOverride() || meta.getEnchantmentGlintOverride() != this.isEnchanted) {
-			System.out.println("Didn't have enchant glint override");
+		if (!meta.hasEnchantmentGlintOverride() || meta.getEnchantmentGlintOverride() != this.isEnchanted)
 			return false;
-		}
-		
+
 		return true;
 	}
 	

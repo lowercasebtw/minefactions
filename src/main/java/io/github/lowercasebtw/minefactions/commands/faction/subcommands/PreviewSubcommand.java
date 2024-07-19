@@ -20,7 +20,6 @@ public class PreviewSubcommand extends CommandImpl {
 	
 	@Override
 	public void executePlayer(Player player, CommandArguments args) {
-		MineFactionsPlugin plugin = MineFactionsPlugin.getInstance();
 		FactionManager factionManager = plugin.getFactionManager();
 		Faction faction = factionManager.getFactionByPlayer(player);
 		if (faction == null) {
@@ -34,7 +33,7 @@ public class PreviewSubcommand extends CommandImpl {
 			return;
 		}
 		
-		if (ParticleManager.toggleParticleBoundary(player, boundingBox)) {
+		if (ParticleManager.toggleParticleBoundary(plugin, player, boundingBox)) {
 			Util.sendMessage(player, "&aOn");
 		} else {
 			Util.sendMessage(player, "&cOff");

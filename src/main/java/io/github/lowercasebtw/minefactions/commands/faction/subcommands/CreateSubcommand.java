@@ -23,7 +23,6 @@ public class CreateSubcommand extends CommandImpl {
 	
 	@Override
 	public void executePlayer(Player player, CommandArguments args) {
-		MineFactionsPlugin plugin = MineFactionsPlugin.getInstance();
 		FactionManager factionManager = plugin.getFactionManager();
 
 		Faction faction = factionManager.getFactionByPlayer(player);

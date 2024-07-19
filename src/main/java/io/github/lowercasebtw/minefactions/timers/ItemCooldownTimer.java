@@ -11,11 +11,13 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.UUID;
 
 public class ItemCooldownTimer extends BukkitRunnable {
-	private int currentTicks = 0;
+	private final MineFactionsPlugin plugin;
 	private final UUID playerUuid;
 	private final Item item;
+	private int currentTicks = 0;
 	
-	public ItemCooldownTimer(UUID playerUuid, CooldownItem item) {
+	public ItemCooldownTimer(MineFactionsPlugin plugin, UUID playerUuid, CooldownItem item) {
+		this.plugin = plugin;
 		this.playerUuid = playerUuid;
 		this.item = item;
 		this.currentTicks = item.getCooldownTicks();
@@ -32,11 +34,11 @@ public class ItemCooldownTimer extends BukkitRunnable {
 	@Override
 	public void run() {
 		if (currentTicks <= 0) {
-			OfflinePlayer offlinePlayer = MineFactionsPlugin.getInstance().getServer().getOfflinePlayer(playerUuid);
+			OfflinePlayer offlinePlayer = plugin.getServer().getOfflinePlayer(playerUuid);
 			if (offlinePlayer.isOnline())
 				Util.sendMessage(offlinePlayer.getPlayer(), "&aYour &r[" + item.getDisplayName() + "&r]&a cooldown has ended!");
 			this.cancel();
-			ItemManager.removeCooldown(offlinePlayer.getUniqueId(), item);
+			plugin.getItemManager().removeCooldown(offlinePlayer.getUniqueId(), item);
 			return;
 		}
 		

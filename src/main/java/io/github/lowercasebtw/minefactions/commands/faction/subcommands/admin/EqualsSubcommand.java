@@ -20,11 +20,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EqualsSubcommand extends CommandImpl {
+	private final ItemManager itemManager;
+	
 	public EqualsSubcommand(MineFactionsPlugin plugin, Commands commands) {
 		super(plugin, commands, "equals");
 		
+		itemManager = plugin.getItemManager();
+		
 		List<String> keys = new ArrayList<>();
-		for (NamespacedKey namespacedKey : ItemManager.keySet()) {
+		for (NamespacedKey namespacedKey : itemManager.keySet()) {
 			keys.add(namespacedKey.toString());
 			keys.add(namespacedKey.getKey());
 		}
@@ -42,10 +46,10 @@ public class EqualsSubcommand extends CommandImpl {
 		else
 			namespacedKey = NamespacedKey.fromString(identifierString);
 		
-		if (!ItemManager.has(namespacedKey)) {
+		if (!itemManager.has(namespacedKey)) {
 			Util.sendMessage(player, Util.colorize("&cThat item does not exist!"));
 			Util.sendMessage(player, Util.colorize("&aCurrent Existing Items:"));
-			for (Item item : ItemManager.values()) {
+			for (Item item : itemManager.values()) {
 				Util.sendMessage(player, Util.colorize(" &7&l- &r(id=" + item.getNamespacedKey() + ") &6\"" + item.getDisplayName() + "&6\""));
 			}
 			return;
@@ -58,7 +62,7 @@ public class EqualsSubcommand extends CommandImpl {
 			return;
 		}
 		
-		Item item = ItemManager.get(namespacedKey);
+		Item item = itemManager.get(namespacedKey);
 		player.sendMessage("Item name: " + item.getDisplayName());
 		player.sendMessage("Item material: " + item.getMaterial());
 		player.sendMessage("Item stack size: " + item.getMaxStackSize());

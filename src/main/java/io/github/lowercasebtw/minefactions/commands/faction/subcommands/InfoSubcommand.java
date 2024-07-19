@@ -73,7 +73,6 @@ public class InfoSubcommand extends CommandImpl {
 	}
 	
 	private void execute(CommandSender sender, String factionName) {
-		MineFactionsPlugin plugin = MineFactionsPlugin.getInstance();
 		FactionManager factionManager = plugin.getFactionManager();
 		Faction faction = factionManager.findFactionByName(factionName, true);
 		if (faction == null) {
@@ -89,7 +88,6 @@ public class InfoSubcommand extends CommandImpl {
 	public void executePlayer(Player player, CommandArguments args) {
 		String factionName = args.getByClassOrDefault("faction_name", String.class, null);
 		
-		MineFactionsPlugin plugin = MineFactionsPlugin.getInstance();
 		FactionManager factionManager = plugin.getFactionManager();
 		if (factionName == null) {
 			Faction faction = factionManager.getFactionByPlayer(player);

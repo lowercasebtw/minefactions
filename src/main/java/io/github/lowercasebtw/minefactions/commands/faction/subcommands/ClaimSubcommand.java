@@ -17,7 +17,6 @@ public class ClaimSubcommand extends CommandImpl {
 	
 	@Override
 	public void executePlayer(Player player, CommandArguments args) {
-		MineFactionsPlugin plugin = MineFactionsPlugin.getInstance();
 		WandManager wandManager = plugin.getWandManager();
 		if (!wandManager.hasWand(player.getUniqueId())) {
 			if (wandManager.giveWand(player)) {

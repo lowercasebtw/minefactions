@@ -20,7 +20,6 @@ public class ListSubcommand extends CommandImpl {
 	}
 	
 	private void showList(CommandSender sender) {
-		MineFactionsPlugin plugin = MineFactionsPlugin.getInstance();
 		FactionManager factionManager = plugin.getFactionManager();
 		List<Faction> factions = factionManager.getFactions();
 		if (factions.isEmpty()) {

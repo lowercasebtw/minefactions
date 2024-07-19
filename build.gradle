@@ -18,13 +18,15 @@ repositories {
     }
     maven { url "https://maven.enginehub.org/repo/" }
     maven { url = "https://repo.codemc.org/repository/maven-public/" }
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
     compileOnly "org.spigotmc:spigot-api:${project.server_version}"
     compileOnly "me.clip:placeholderapi:${project.placeholder_api_version}"
     compileOnly "dev.jorel:commandapi-bukkit-core:${project.command_api_version}"
-//    implementation "net.kyori:adventure-api:${project.kyori_adventure_api_version}"
+    implementation "net.kyori:adventure-api:${project.kyori_adventure_api_version}"
+    implementation "com.github.jordanosterberg.jscoreboards:JScoreboards:${project.jscoreboards_version}"
 }
 
 def targetJavaVersion = JavaLanguageVersion.of(project.java_version).asInt()

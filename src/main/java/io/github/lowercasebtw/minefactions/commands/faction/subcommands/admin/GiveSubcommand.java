@@ -17,11 +17,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GiveSubcommand extends CommandImpl {
+	private final ItemManager itemManager;
+	
 	public GiveSubcommand(MineFactionsPlugin plugin, Commands commands) {
 		super(plugin, commands, "give");
 		
+		itemManager = plugin.getItemManager();
+		
 		List<String> keys = new ArrayList<>();
-		for (NamespacedKey namespacedKey : ItemManager.keySet()) {
+		for (NamespacedKey namespacedKey : itemManager.keySet()) {
 			keys.add(namespacedKey.toString());
 			keys.add(namespacedKey.getKey());
 		}
@@ -39,22 +43,22 @@ public class GiveSubcommand extends CommandImpl {
 		else
 			namespacedKey = NamespacedKey.fromString(identifierString);
 		
-		if (!ItemManager.has(namespacedKey)) {
-			Util.sendMessage(player, Util.colorize("&cThat item does not exist!"));
-			Util.sendMessage(player, Util.colorize("&aCurrent Existing Items:"));
-			for (Item item : ItemManager.values()) {
-				Util.sendMessage(player, Util.colorize(" &7&l- &r(id=" + item.getNamespacedKey() + ") &6\"" + item.getDisplayName() + "&6\""));
+		if (!itemManager.has(namespacedKey)) {
+			Util.sendMessage(player, "&cThat item does not exist!");
+			Util.sendMessage(player, "&aCurrent Existing Items:");
+			for (Item item : itemManager.values()) {
+				Util.sendMessage(player, " &7&l- &r(id=" + item.getNamespacedKey() + ") &6\"" + item.getDisplayName() + "&6\"");
 			}
 			return;
 		}
 		
-		Item item = ItemManager.get(namespacedKey);
-		if (!ItemManager.giveItem(player, item)) {
-			Util.sendMessage(player, Util.colorize("&cCould not give item, your inventory is full!"));
+		Item item = itemManager.get(namespacedKey);
+		if (!itemManager.giveItem(player, item)) {
+			Util.sendMessage(player, "&cCould not give item, your inventory is full!");
 			return;
 		}
 		
-		Util.sendMessage(player, Util.colorize("Gave 1 [" + item.getDisplayName() + "&r] to " + player.getDisplayName()));
+		Util.sendMessage(player, "Gave 1 [" + item.getDisplayName() + "&r] to " + player.getDisplayName());
 	}
 	
 	@Override

@@ -1,5 +1,6 @@
 package io.github.lowercasebtw.minefactions.manager;
 
+import io.github.lowercasebtw.minefactions.MineFactionsPlugin;
 import io.github.lowercasebtw.minefactions.items.Items;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -42,10 +43,13 @@ public class WandManager {
 		}
 	}
 	
+	private final MineFactionsPlugin plugin;
+	
 	private final Map<UUID, ClaimHandle> claimCache;
 	private final List<UUID> wandCache;
 	
-	public WandManager() {
+	public WandManager(MineFactionsPlugin plugin) {
+		this.plugin = plugin;
 		this.claimCache = new HashMap<>();
 		this.wandCache = new ArrayList<>();
 	}
@@ -56,7 +60,7 @@ public class WandManager {
 			return false;
 		if (wandCache.contains(player.getUniqueId()))
 			return false;
-		ItemManager.giveItem(player, Items.CLAIM_WAND);
+		plugin.getItemManager().giveItem(player, Items.CLAIM_WAND);
 		wandCache.add(player.getUniqueId());
 		return true;
 	}
@@ -64,7 +68,7 @@ public class WandManager {
 	public void removeWand(Player player) {
 		PlayerInventory inventory = player.getInventory();
 		for (ItemStack stack : inventory.getContents()) {
-			if (stack != null && ItemManager.isCustomItem(stack) && Items.CLAIM_WAND.equalsStack(stack)) {
+			if (stack != null && plugin.getItemManager().isCustomItem(stack) && Items.CLAIM_WAND.equalsStack(stack)) {
 				inventory.remove(stack);
 			}
 		}

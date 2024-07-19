@@ -22,10 +22,16 @@ import java.util.*;
 
 public class ItemManager implements Listener {
 	public static final NamespacedKey CUSTOM_ITEM_IDENTIFIER_NAMESPACE = Util.identifier("custom_item_identifier");
+	
+	private static MineFactionsPlugin plugin;
 	private static final Map<NamespacedKey, Item> ITEMS = new HashMap<>();
 	private static final Map<UUID, List<ItemCooldownTimer>> COOLDOWN_TIMERS = new HashMap<>();
 	
-	public static void register(Item item) {
+	public ItemManager(MineFactionsPlugin plugin) {
+		this.plugin = plugin;
+	}
+	
+	public void register(Item item) {
 		if (has(item.getNamespacedKey())) {
 			throw new Error("Item with identifier '" + item.getNamespacedKey() + "' already registered!");
 		}
@@ -33,7 +39,7 @@ public class ItemManager implements Listener {
 		ITEMS.put(item.getNamespacedKey(), item);
 	}
 	
-	public static boolean giveItem(Player player, Item item) {
+	public boolean giveItem(Player player, Item item) {
 		PlayerInventory inventory = player.getInventory();
 		if (inventory.firstEmpty() == -1)
 			return false;
@@ -41,11 +47,11 @@ public class ItemManager implements Listener {
 		return true;
 	}
 	
-	public static boolean has(NamespacedKey identifier) {
+	public boolean has(NamespacedKey identifier) {
 		return ITEMS.containsKey(identifier);
 	}
 	
-	public static Item get(NamespacedKey identifier) {
+	public Item get(NamespacedKey identifier) {
 		return ITEMS.get(identifier);
 	}
 	
@@ -60,16 +66,16 @@ public class ItemManager implements Listener {
 		return -1;
 	}
 	
-	public static void startCooldown(UUID uuid, CooldownItem item) {
+	public void startCooldown(UUID uuid, CooldownItem item) {
 		if (!COOLDOWN_TIMERS.containsKey(uuid))
 			COOLDOWN_TIMERS.put(uuid, new ArrayList<>());
 		List<ItemCooldownTimer> timers = COOLDOWN_TIMERS.get(uuid);
-		ItemCooldownTimer timer = new ItemCooldownTimer(uuid, item);
-		timer.runTaskTimer(MineFactionsPlugin.getInstance(), 1, 1);
+		ItemCooldownTimer timer = new ItemCooldownTimer(plugin, uuid, item);
+		timer.runTaskTimer(plugin, 1, 1);
 		timers.add(timer);
 	}
 	
-	public static void removeCooldown(UUID uuid, Item item) {
+	public void removeCooldown(UUID uuid, Item item) {
 		if (!COOLDOWN_TIMERS.containsKey(uuid))
 			return;
 		
@@ -86,7 +92,7 @@ public class ItemManager implements Listener {
 			COOLDOWN_TIMERS.remove(uuid);
 	}
 	
-	public static boolean isCustomItem(ItemStack itemStack) {
+	public boolean isCustomItem(ItemStack itemStack) {
 		for (Item item : values()) {
 			if (item.equalsStack(itemStack)) {
 				return true;
@@ -95,7 +101,7 @@ public class ItemManager implements Listener {
 		return false;
 	}
 	
-	public static Item getItemForStack(ItemStack itemStack) {
+	public Item getItemForStack(ItemStack itemStack) {
 		if (!isCustomItem(itemStack))
 			return null;
 		for (Item item : values()) {
@@ -105,11 +111,11 @@ public class ItemManager implements Listener {
 		return null;
 	}
 	
-	public static Set<NamespacedKey> keySet() {
+	public Set<NamespacedKey> keySet() {
 		return ITEMS.keySet();
 	}
 	
-	public static Collection<Item> values() {
+	public Collection<Item> values() {
 		return ITEMS.values();
 	}
 	
@@ -119,11 +125,11 @@ public class ItemManager implements Listener {
 		Player player = event.getPlayer();
 		
 		ItemStack itemStack = event.getItem();
-		if (itemStack == null || !ItemManager.isCustomItem(itemStack)) {
+		if (itemStack == null || !this.isCustomItem(itemStack)) {
 			return;
 		}
 		
-		Item item = ItemManager.getItemForStack(itemStack);
+		Item item = this.getItemForStack(itemStack);
 		if (item == null) {
 			return;
 		}
@@ -136,7 +142,6 @@ public class ItemManager implements Listener {
 		event.setCancelled(true);
 		event.setUseItemInHand(Event.Result.DENY);
 		if (item instanceof ClaimWandItem) {
-			MineFactionsPlugin plugin = MineFactionsPlugin.getInstance();
 			WandManager wandManager = plugin.getWandManager();
 			
 			Action action = event.getAction();
@@ -161,7 +166,7 @@ public class ItemManager implements Listener {
 			int cooldownTicks = this.getCooldown(player, item);
 			if (cooldownTicks == -1) {
 				Util.sendMessage(player, "&aYou used the item!");
-				ItemManager.startCooldown(player.getUniqueId(), cooldownItem);
+				this.startCooldown(player.getUniqueId(), cooldownItem);
 				return;
 			}
 			
