@@ -15,7 +15,7 @@ public class ParticleManager {
 	public static boolean toggleParticleBoundary(Player player, BoundingBox boundingBox) {
 		UUID uuid = player.getUniqueId();
 		if (timers.containsKey(uuid)) {
-			timers.get(uuid).cancel();;
+			timers.get(uuid).cancel();
 			timers.remove(uuid);
 			return false;
 		} else {

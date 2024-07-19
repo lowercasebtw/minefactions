@@ -1,10 +1,9 @@
 package io.github.lowercasebtw.minefactions.timers;
 
-import org.bukkit.scheduler.BukkitRunnable;
-
 import io.github.lowercasebtw.minefactions.MineFactionsPlugin;
 import io.github.lowercasebtw.minefactions.manager.Faction;
 import io.github.lowercasebtw.minefactions.manager.FactionManager;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class DTRTimer extends BukkitRunnable {
     private int currentTick = 0;

@@ -1,12 +1,12 @@
 package io.github.lowercasebtw.minefactions.commands.faction.subcommands;
 
-import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.CommandPermission;
 import dev.jorel.commandapi.executors.CommandArguments;
 import io.github.lowercasebtw.minefactions.MineFactionsPlugin;
+import io.github.lowercasebtw.minefactions.commands.CommandImpl;
+import io.github.lowercasebtw.minefactions.commands.Commands;
 import io.github.lowercasebtw.minefactions.manager.Faction;
 import io.github.lowercasebtw.minefactions.manager.FactionManager;
-import io.github.lowercasebtw.minefactions.commands.CommandImpl;
 import io.github.lowercasebtw.minefactions.util.Util;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -14,9 +14,9 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public class ListSubcommand extends CommandAPICommand implements CommandImpl {
-	public ListSubcommand() {
-		super("list");
+public class ListSubcommand extends CommandImpl {
+	public ListSubcommand(MineFactionsPlugin plugin, Commands commands) {
+		super(plugin, commands, "list");
 	}
 	
 	private void showList(CommandSender sender) {

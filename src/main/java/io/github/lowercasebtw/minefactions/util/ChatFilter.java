@@ -8,14 +8,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ChatFilter {
-    private static List<Pattern> patternCache = new LinkedList<>();
-
+    private static final List<Pattern> patternCache = new LinkedList<>();
+    private static final String formattingRegex = "(\\b|&[a-fA-F0-9klmnorKLMNOR])";
+    
     public static void initialize() {
         patternCache.clear();
         MineFactionsPlugin plugin = MineFactionsPlugin.getInstance();
         List<String> bannedWords = plugin.getConfig().getStringList("banned-words");
         if (!bannedWords.isEmpty()) {
-            final String formattingRegex = "(\\b|&[a-fA-F0-9klmnorKLMNOR])";
             for (String bannedWord : bannedWords) {
                 bannedWord = bannedWord.trim().toLowerCase();
                 Pattern pattern = Pattern.compile(formattingRegex + "(" + bannedWord + ")" + formattingRegex,

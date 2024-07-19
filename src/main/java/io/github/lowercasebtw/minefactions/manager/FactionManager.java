@@ -23,10 +23,16 @@ import java.util.UUID;
 import java.util.logging.Level;
 
 public class FactionManager implements Listener {
-    private final List<Faction> factions = new LinkedList<>();
+    private final MineFactionsPlugin plugin;
+    private final List<Faction> factions;
+    private final DTRTimer timer;
 
-    private final DTRTimer timer = new DTRTimer();
-
+    public FactionManager(MineFactionsPlugin plugin) {
+        this.plugin = plugin;
+        this.factions = new LinkedList<>();
+        this.timer = new DTRTimer();
+    }
+    
     public List<Faction> getFactions() {
         return factions;
     }
@@ -59,8 +65,7 @@ public class FactionManager implements Listener {
         }).findFirst().orElse(null);
     }
     
-    public static void claimRegion(WandManager wandManager, Player player) {
-        MineFactionsPlugin plugin = MineFactionsPlugin.getInstance();
+    public void claimRegion(WandManager wandManager, Player player) {
         FactionManager factionManager = plugin.getFactionManager();
         Faction faction = factionManager.getFactionByPlayer(player);
         if (faction == null) {
@@ -116,8 +121,6 @@ public class FactionManager implements Listener {
 
     public boolean loadFactions() {
         factions.clear();
-
-        MineFactionsPlugin plugin = MineFactionsPlugin.getInstance();
         Configuration configuration = plugin.getConfig();
 
         ConfigurationSection factionsSection = configuration.getConfigurationSection("factions");
@@ -143,7 +146,6 @@ public class FactionManager implements Listener {
     }
 
     public boolean saveFactions() {
-        MineFactionsPlugin plugin = MineFactionsPlugin.getInstance();
         Configuration configuration = plugin.getConfig();
         try {
             ConfigurationSection factionsSection = configuration.getConfigurationSection("factions");
@@ -168,7 +170,6 @@ public class FactionManager implements Listener {
     // Events
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
-        MineFactionsPlugin plugin = MineFactionsPlugin.getInstance();
         FactionManager factionManager = plugin.getFactionManager();
         Block block = event.getBlock();
         Player player = event.getPlayer();
@@ -186,7 +187,6 @@ public class FactionManager implements Listener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        MineFactionsPlugin plugin = MineFactionsPlugin.getInstance();
         FactionManager factionManager = plugin.getFactionManager();
         for (Faction faction : factionManager.getFactions()) {
             BoundingBox boundingBox = faction.getBoundingBox();

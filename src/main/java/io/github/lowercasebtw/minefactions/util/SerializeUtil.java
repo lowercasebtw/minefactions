@@ -1,7 +1,6 @@
 package io.github.lowercasebtw.minefactions.util;
 
 import io.github.lowercasebtw.minefactions.MineFactionsPlugin;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;

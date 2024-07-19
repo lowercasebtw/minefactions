@@ -4,7 +4,5 @@ main: io.github.lowercasebtw.minefactions.MineFactionsPlugin
 api-version: '1.21'
 description: A Factions Plugin for Minecraft 1.21+
 author: lowercasebtw
-softdepend:
-  - PlaceholderAPI
-depend:
-  - CommandAPI
+softdepend: [PlaceholderAPI]
+depend: [CommandAPI]

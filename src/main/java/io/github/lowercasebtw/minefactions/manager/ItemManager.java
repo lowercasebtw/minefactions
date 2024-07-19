@@ -21,9 +21,8 @@ import org.bukkit.inventory.PlayerInventory;
 import java.util.*;
 
 public class ItemManager implements Listener {
-	public static NamespacedKey CUSTOM_ITEM_IDENTIFIER_NAMESPACE = Util.identifier("custom_item_identifier");
+	public static final NamespacedKey CUSTOM_ITEM_IDENTIFIER_NAMESPACE = Util.identifier("custom_item_identifier");
 	private static final Map<NamespacedKey, Item> ITEMS = new HashMap<>();
-	
 	private static final Map<UUID, List<ItemCooldownTimer>> COOLDOWN_TIMERS = new HashMap<>();
 	
 	public static void register(Item item) {
@@ -50,7 +49,7 @@ public class ItemManager implements Listener {
 		return ITEMS.get(identifier);
 	}
 	
-	public static int getCooldown(Player player, Item item) {
+	public int getCooldown(Player player, Item item) {
 		if (!COOLDOWN_TIMERS.containsKey(player.getUniqueId()))
 			return -1;
 		for (ItemCooldownTimer timer : COOLDOWN_TIMERS.get(player.getUniqueId())) {
@@ -142,7 +141,7 @@ public class ItemManager implements Listener {
 			
 			Action action = event.getAction();
 			if (action == Action.RIGHT_CLICK_AIR) {
-				FactionManager.claimRegion(wandManager, player);
+				plugin.getFactionManager().claimRegion(wandManager, player);
 				return;
 			}
 			
@@ -159,7 +158,7 @@ public class ItemManager implements Listener {
 				claimHandle.setBottomRight(block.getLocation());
 			}
 		} else if (item instanceof CooldownItem cooldownItem) {
-			int cooldownTicks = ItemManager.getCooldown(player, item);
+			int cooldownTicks = this.getCooldown(player, item);
 			if (cooldownTicks == -1) {
 				Util.sendMessage(player, "&aYou used the item!");
 				ItemManager.startCooldown(player.getUniqueId(), cooldownItem);

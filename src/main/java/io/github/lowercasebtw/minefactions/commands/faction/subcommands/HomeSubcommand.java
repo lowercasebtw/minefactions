@@ -1,6 +1,5 @@
 package io.github.lowercasebtw.minefactions.commands.faction.subcommands;
 
-import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.CommandPermission;
 import dev.jorel.commandapi.executors.CommandArguments;
 import io.github.lowercasebtw.minefactions.MineFactionsPlugin;
@@ -14,10 +13,10 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-public class HomeSubcommand extends CommandAPICommand implements CommandImpl {
-	public HomeSubcommand() {
-		super("home");
-		Commands.withSubcommands(this, new SetSubcommand());
+public class HomeSubcommand extends CommandImpl {
+	public HomeSubcommand(MineFactionsPlugin plugin, Commands commands) {
+		super(plugin, commands, "home");
+		commands.withSubcommands(this, SetSubcommand.class);
 	}
 	
 	@Override

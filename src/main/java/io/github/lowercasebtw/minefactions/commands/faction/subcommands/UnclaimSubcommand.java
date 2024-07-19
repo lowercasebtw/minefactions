@@ -1,19 +1,19 @@
 package io.github.lowercasebtw.minefactions.commands.faction.subcommands;
 
-import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.CommandPermission;
 import dev.jorel.commandapi.executors.CommandArguments;
 import io.github.lowercasebtw.minefactions.MineFactionsPlugin;
 import io.github.lowercasebtw.minefactions.commands.CommandImpl;
+import io.github.lowercasebtw.minefactions.commands.Commands;
 import io.github.lowercasebtw.minefactions.manager.Faction;
 import io.github.lowercasebtw.minefactions.manager.FactionManager;
 import io.github.lowercasebtw.minefactions.util.Util;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-public class UnclaimSubcommand extends CommandAPICommand implements CommandImpl {
-	public UnclaimSubcommand() {
-		super("unclaim");
+public class UnclaimSubcommand extends CommandImpl {
+	public UnclaimSubcommand(MineFactionsPlugin plugin, Commands commands) {
+		super(plugin, commands, "unclaim");
 	}
 	
 	@Override

@@ -1,10 +1,11 @@
 package io.github.lowercasebtw.minefactions.commands.faction.subcommands.admin;
 
-import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.CommandPermission;
 import dev.jorel.commandapi.arguments.MultiLiteralArgument;
 import dev.jorel.commandapi.executors.CommandArguments;
+import io.github.lowercasebtw.minefactions.MineFactionsPlugin;
 import io.github.lowercasebtw.minefactions.commands.CommandImpl;
+import io.github.lowercasebtw.minefactions.commands.Commands;
 import io.github.lowercasebtw.minefactions.items.Item;
 import io.github.lowercasebtw.minefactions.manager.ItemManager;
 import io.github.lowercasebtw.minefactions.util.Util;
@@ -15,9 +16,9 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GiveSubcommand extends CommandAPICommand implements CommandImpl {
-	public GiveSubcommand() {
-		super("give");
+public class GiveSubcommand extends CommandImpl {
+	public GiveSubcommand(MineFactionsPlugin plugin, Commands commands) {
+		super(plugin, commands, "give");
 		
 		List<String> keys = new ArrayList<>();
 		for (NamespacedKey namespacedKey : ItemManager.keySet()) {
@@ -46,7 +47,7 @@ public class GiveSubcommand extends CommandAPICommand implements CommandImpl {
 			}
 			return;
 		}
-
+		
 		Item item = ItemManager.get(namespacedKey);
 		if (!ItemManager.giveItem(player, item)) {
 			Util.sendMessage(player, Util.colorize("&cCould not give item, your inventory is full!"));

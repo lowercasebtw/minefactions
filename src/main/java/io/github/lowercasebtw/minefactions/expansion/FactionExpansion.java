@@ -8,7 +8,7 @@ import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
 public class FactionExpansion extends PlaceholderExpansion {
-	private MineFactionsPlugin plugin;
+	private final MineFactionsPlugin plugin;
 	
 	public FactionExpansion(MineFactionsPlugin plugin) {
 		this.plugin = plugin;

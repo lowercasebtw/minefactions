@@ -1,35 +1,35 @@
-package io.github.lowercasebtw.minefactions.commands.faction.subcommands.admin;
+package io.github.lowercasebtw.minefactions.commands.faction.subcommands;
 
 import dev.jorel.commandapi.CommandPermission;
 import dev.jorel.commandapi.executors.CommandArguments;
 import io.github.lowercasebtw.minefactions.MineFactionsPlugin;
 import io.github.lowercasebtw.minefactions.commands.CommandImpl;
 import io.github.lowercasebtw.minefactions.commands.Commands;
-import io.github.lowercasebtw.minefactions.util.Util;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-public class SetSubcommand extends CommandImpl {
-	public SetSubcommand(MineFactionsPlugin plugin, Commands commands) {
-		super(plugin, commands, "set");
+public class ModifySubcommand extends CommandImpl {
+	public ModifySubcommand(MineFactionsPlugin plugin, Commands commands) {
+		super(plugin, commands, "modify");
 	}
 	
 	@Override
-	public void executePlayer(Player player, CommandArguments args) {
-		Util.sendMessage(player, "set cmd");
+	public void executePlayer(Player sender, CommandArguments args) {
+	
 	}
 	
 	@Override
 	public void executeConsole(ConsoleCommandSender sender, CommandArguments args) {
+	
 	}
 	
 	@Override
 	public String getFullDescription() {
-		return "Set certain data in the faction";
+		return "Modify your factions info";
 	}
 	
 	@Override
 	public CommandPermission getPermission() {
-		return CommandPermission.fromString("minefactions.command.faction.admin.set");
+		return CommandPermission.fromString("minefactions.command.faction.modify");
 	}
 }

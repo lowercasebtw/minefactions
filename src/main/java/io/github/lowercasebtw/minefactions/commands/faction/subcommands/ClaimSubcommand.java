@@ -1,19 +1,18 @@
 package io.github.lowercasebtw.minefactions.commands.faction.subcommands;
 
-import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.CommandPermission;
 import dev.jorel.commandapi.executors.CommandArguments;
 import io.github.lowercasebtw.minefactions.MineFactionsPlugin;
 import io.github.lowercasebtw.minefactions.commands.CommandImpl;
-import io.github.lowercasebtw.minefactions.manager.FactionManager;
+import io.github.lowercasebtw.minefactions.commands.Commands;
 import io.github.lowercasebtw.minefactions.manager.WandManager;
 import io.github.lowercasebtw.minefactions.util.Util;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-public class ClaimSubcommand extends CommandAPICommand implements CommandImpl {
-	public ClaimSubcommand() {
-		super("claim");
+public class ClaimSubcommand extends CommandImpl {
+	public ClaimSubcommand(MineFactionsPlugin plugin, Commands commands) {
+		super(plugin, commands, "claim");
 	}
 	
 	@Override
@@ -27,7 +26,7 @@ public class ClaimSubcommand extends CommandAPICommand implements CommandImpl {
 				Util.sendMessage(player, "&cYou already have a wand!");
 			}
 		} else {
-			FactionManager.claimRegion(wandManager, player);
+			plugin.getFactionManager().claimRegion(wandManager, player);
 		}
 	}
 	

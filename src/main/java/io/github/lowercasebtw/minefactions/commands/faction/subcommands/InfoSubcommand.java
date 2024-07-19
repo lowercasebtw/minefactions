@@ -1,12 +1,12 @@
 package io.github.lowercasebtw.minefactions.commands.faction.subcommands;
 
-import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.CommandPermission;
 import dev.jorel.commandapi.arguments.ArgumentSuggestions;
 import dev.jorel.commandapi.arguments.LiteralArgument;
 import dev.jorel.commandapi.executors.CommandArguments;
 import io.github.lowercasebtw.minefactions.MineFactionsPlugin;
 import io.github.lowercasebtw.minefactions.commands.CommandImpl;
+import io.github.lowercasebtw.minefactions.commands.Commands;
 import io.github.lowercasebtw.minefactions.manager.Faction;
 import io.github.lowercasebtw.minefactions.manager.FactionManager;
 import io.github.lowercasebtw.minefactions.util.Util;
@@ -23,12 +23,11 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-public class InfoSubcommand extends CommandAPICommand implements CommandImpl {
-	public InfoSubcommand() {
-		super("info");
+public class InfoSubcommand extends CommandImpl {
+	public InfoSubcommand(MineFactionsPlugin plugin, Commands commands) {
+		super(plugin, commands, "info");
 		// TODO: look if they used ign or uuid
 		this.withArguments(new LiteralArgument("faction_name").setOptional(true).replaceSuggestions(ArgumentSuggestions.stringCollectionAsync(info -> CompletableFuture.supplyAsync(() -> {
-			MineFactionsPlugin plugin = MineFactionsPlugin.getInstance();
 			FactionManager factionManager = plugin.getFactionManager();
 			return factionManager.getFactions().stream().map(Faction::getName).map(ChatColor::stripColor).toList();
 		}))));
@@ -89,7 +88,7 @@ public class InfoSubcommand extends CommandAPICommand implements CommandImpl {
 	@Override
 	public void executePlayer(Player player, CommandArguments args) {
 		String factionName = args.getByClassOrDefault("faction_name", String.class, null);
-
+		
 		MineFactionsPlugin plugin = MineFactionsPlugin.getInstance();
 		FactionManager factionManager = plugin.getFactionManager();
 		if (factionName == null) {
@@ -99,11 +98,11 @@ public class InfoSubcommand extends CommandAPICommand implements CommandImpl {
 				Util.sendMessage(player, Util.colorize("&aDo \"/f info <faction>\" to check the info of other factions!"));
 				return;
 			}
-
+			
 			showInfo(plugin, player, faction);
 			return;
 		}
-
+		
 		execute(player, factionName);
 	}
 	

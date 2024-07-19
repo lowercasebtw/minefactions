@@ -3,6 +3,7 @@ package io.github.lowercasebtw.minefactions.commands.faction;
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.CommandPermission;
 import dev.jorel.commandapi.executors.CommandArguments;
+import io.github.lowercasebtw.minefactions.MineFactionsPlugin;
 import io.github.lowercasebtw.minefactions.commands.CommandImpl;
 import io.github.lowercasebtw.minefactions.commands.Commands;
 import io.github.lowercasebtw.minefactions.commands.faction.subcommands.*;
@@ -11,25 +12,26 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-public class FactionCommand extends CommandAPICommand implements CommandImpl {
-	public FactionCommand() {
-		super("faction");
+public class FactionCommand extends CommandImpl {
+	public FactionCommand(MineFactionsPlugin plugin, Commands commands) {
+		super(plugin, commands, "faction");
 		this.withAliases("factions", "f");
-		Commands.withSubcommands(this,
-			new AboutSubcommand(),
-			new AcceptSubcommand(),
-			new AdminSubcommand(),
-			new ClaimSubcommand(),
-			new CreateSubcommand(),
-			new DisbandSubcommand(),
-			new GuiSubcommand(),
-			new HelpSubcommand(),
-			new HomeSubcommand(),
-			new InfoSubcommand(),
-			new InviteSubcommand(),
-			new ListSubcommand(),
-			new PreviewSubcommand(),
-			new UnclaimSubcommand());
+		commands.withSubcommands(this,
+				AboutSubcommand.class,
+				AcceptSubcommand.class,
+				AdminSubcommand.class,
+				ClaimSubcommand.class,
+				CreateSubcommand.class,
+				DisbandSubcommand.class,
+				GuiSubcommand.class,
+				HelpSubcommand.class,
+				HomeSubcommand.class,
+				InfoSubcommand.class,
+				InviteSubcommand.class,
+				ListSubcommand.class,
+				ModifySubcommand.class,
+				PreviewSubcommand.class,
+				UnclaimSubcommand.class);
 	}
 	
 	private void showCommandsList(CommandSender sender) {
@@ -45,8 +47,6 @@ public class FactionCommand extends CommandAPICommand implements CommandImpl {
 		// help (TODO)
 		// invite <player> (TODO)
 		// accept (TODO)
-		// claim (system) (TODO)
-		// unclaim (TODO)
 		// gui? (TODO)
 		// set (description, prefix, name) <text> (TODO)
 		showCommandsList(player);

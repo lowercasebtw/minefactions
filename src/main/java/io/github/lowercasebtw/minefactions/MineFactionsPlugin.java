@@ -10,33 +10,48 @@ import io.github.lowercasebtw.minefactions.util.ChatFilter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class MineFactionsPlugin extends JavaPlugin {
-    private static MineFactionsPlugin instance;
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 
+public final class MineFactionsPlugin extends JavaPlugin {
+    private static MineFactionsPlugin INSTANCE;
+    
     private FactionManager factionManager;
-    private ItemManager itemManager;
-    private WandManager wandManager;
+	private ItemManager itemManager;
+	private WandManager wandManager;
 
     @Override
     public void onEnable() {
-        instance = this;
+        INSTANCE = this;
+        
+        // Config
+        File dataFolder = getDataFolder();
+        if (!dataFolder.exists()) {
+            dataFolder.mkdirs();
+        }
         
         saveDefaultConfig();
         reloadConfig();
         
         // Initialize all custom items
-        Items.initialize();
+        Items.initialize(); // Requires a plugin?
         
         // Initialize all commands
-        Commands.initialize();
-        
-        // Initialize the Chat Filter
-        ChatFilter.initialize();
+		try {
+            new Commands(this); // Requires a plugin
+		} catch (InvocationTargetException | InstantiationException | IllegalAccessException exception) {
+            getLogger().severe("Failed to load minefactions plugin! Commands failed to register. Shutting down..");
+            exception.printStackTrace();
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+		
+		// Initialize the Chat Filter
+        ChatFilter.initialize(); // Requires a plugin
 
-        factionManager = new FactionManager();
+        factionManager = new FactionManager(this);
         factionManager.loadFactions();
-        
-        itemManager = new ItemManager();
+		itemManager = new ItemManager(); // Requires a plugin
         wandManager = new WandManager();
 
         getServer().getPluginManager().registerEvents(factionManager, this);
@@ -52,16 +67,16 @@ public final class MineFactionsPlugin extends JavaPlugin {
     public void onDisable() {
         factionManager.saveFactions();
     }
-
-    public static MineFactionsPlugin getInstance() {
-        return instance;
-    }
-
+    
     public FactionManager getFactionManager() {
         return factionManager;
     }
     
     public WandManager getWandManager() {
         return wandManager;
+    }
+    
+    public static MineFactionsPlugin getInstance() {
+        return INSTANCE;
     }
 }

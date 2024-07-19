@@ -1,10 +1,11 @@
 package io.github.lowercasebtw.minefactions.commands.faction.subcommands.admin;
 
-import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.CommandPermission;
 import dev.jorel.commandapi.arguments.MultiLiteralArgument;
 import dev.jorel.commandapi.executors.CommandArguments;
+import io.github.lowercasebtw.minefactions.MineFactionsPlugin;
 import io.github.lowercasebtw.minefactions.commands.CommandImpl;
+import io.github.lowercasebtw.minefactions.commands.Commands;
 import io.github.lowercasebtw.minefactions.items.Item;
 import io.github.lowercasebtw.minefactions.manager.ItemManager;
 import io.github.lowercasebtw.minefactions.util.Util;
@@ -18,9 +19,9 @@ import org.bukkit.inventory.PlayerInventory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EqualsSubcommand extends CommandAPICommand implements CommandImpl {
-	public EqualsSubcommand() {
-		super("equals");
+public class EqualsSubcommand extends CommandImpl {
+	public EqualsSubcommand(MineFactionsPlugin plugin, Commands commands) {
+		super(plugin, commands, "equals");
 		
 		List<String> keys = new ArrayList<>();
 		for (NamespacedKey namespacedKey : ItemManager.keySet()) {
@@ -49,7 +50,7 @@ public class EqualsSubcommand extends CommandAPICommand implements CommandImpl {
 			}
 			return;
 		}
-
+		
 		PlayerInventory inventory = player.getInventory();
 		ItemStack itemStack = inventory.getItem(inventory.getHeldItemSlot());
 		if (itemStack == null || itemStack.getType() == Material.AIR) {

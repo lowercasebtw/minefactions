@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class Util {
-    public static String IDENTIFIER = "minefactions";
+    public static String NAMESPACE = "minefactions";
     
     public static String colorize(String input) {
         return ChatColor.translateAlternateColorCodes('&', input);
@@ -21,6 +21,6 @@ public class Util {
     }
     
     public static NamespacedKey identifier(String key) {
-        return NamespacedKey.fromString(IDENTIFIER + ":" + key);
+        return NamespacedKey.fromString(NAMESPACE + ":" + key);
     }
 }

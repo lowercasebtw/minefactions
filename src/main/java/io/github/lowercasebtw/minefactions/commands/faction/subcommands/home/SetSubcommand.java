@@ -1,10 +1,10 @@
 package io.github.lowercasebtw.minefactions.commands.faction.subcommands.home;
 
-import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.CommandPermission;
 import dev.jorel.commandapi.executors.CommandArguments;
 import io.github.lowercasebtw.minefactions.MineFactionsPlugin;
 import io.github.lowercasebtw.minefactions.commands.CommandImpl;
+import io.github.lowercasebtw.minefactions.commands.Commands;
 import io.github.lowercasebtw.minefactions.manager.Faction;
 import io.github.lowercasebtw.minefactions.manager.FactionManager;
 import io.github.lowercasebtw.minefactions.util.Util;
@@ -14,9 +14,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 
-public class SetSubcommand extends CommandAPICommand implements CommandImpl {
-	public SetSubcommand() {
-		super("set");
+public class SetSubcommand extends CommandImpl {
+	public SetSubcommand(MineFactionsPlugin plugin, Commands commands) {
+		super(plugin, commands, "set");
 	}
 	
 	@Override

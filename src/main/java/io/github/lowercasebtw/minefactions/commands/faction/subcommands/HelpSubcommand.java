@@ -1,16 +1,17 @@
 package io.github.lowercasebtw.minefactions.commands.faction.subcommands;
 
-import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.CommandPermission;
 import dev.jorel.commandapi.executors.CommandArguments;
+import io.github.lowercasebtw.minefactions.MineFactionsPlugin;
 import io.github.lowercasebtw.minefactions.commands.CommandImpl;
+import io.github.lowercasebtw.minefactions.commands.Commands;
 import io.github.lowercasebtw.minefactions.util.Util;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-public class HelpSubcommand extends CommandAPICommand implements CommandImpl {
-	public HelpSubcommand() {
-		super("help");
+public class HelpSubcommand extends CommandImpl {
+	public HelpSubcommand(MineFactionsPlugin plugin, Commands commands) {
+		super(plugin, commands, "help");
 	}
 	
 	@Override
